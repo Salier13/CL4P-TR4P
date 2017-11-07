@@ -1,4 +1,5 @@
 const fs = require('fs');
+const http = require('http');
 const Discord = require('discord.js');
 const bot = new Discord.Client();
 
@@ -14,13 +15,13 @@ bot.on('message', message => {
   }
   
   // Diplodocus
-  var arr = /d[iy](\w+)\W?/gi.exec(message.content);
+  var arr = /d[iy]([\wéèãàñÉÈÀ]+)\W?/gi.exec(message.content);
   if(arr != null) {
     message.channel.send(arr[1] + " !");
   }
   
   // Criplodocus
-  arr = /cr[iy](\w+)\W?/gi.exec(message.content);
+  arr = /cr[iy]([\wéèãàñÉÈÀ]+)\W?/gi.exec(message.content);
   if(arr != null) {
     message.channel.send(arr[1].toUpperCase() + " !");
   }
