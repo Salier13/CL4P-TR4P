@@ -7,6 +7,8 @@ bot.on('ready', function () {
 })
 
 bot.on('message', message => {
+  if(message.author.username == bot.user.username) {return;}  // Do not process our own messages
+
   if (message.content === 'ping') {
     message.reply('pong !');
   }
@@ -28,6 +30,11 @@ bot.on('message', message => {
   if(arr != null) {
     message.channel.send(arr[1]);
     message.delete();
+  }
+  
+  // Help
+  if(message.content == "!help" || message.content == "!aide") {
+    message.channel.send("**Bonjour, je suis CL4P-TR4P !**\nVoici toutes les comandes que je connais pour le moment :\n - !say *message* : parle à la place du bot. \n - !help : affiche ce message d'aide. \nPlus de fonctionnalités sont en cours de développement, un jour je battrai José... '");
   }
 })
 
