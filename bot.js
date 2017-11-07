@@ -11,22 +11,23 @@ bot.on('message', message => {
     message.reply('pong !');
   }
   
-  //Diplodocus
-  var arr = /[dD]i(\w+)\W?/g.exec(message.content);
+  // Diplodocus
+  var arr = /d[iy](\w+)\W?/gi.exec(message.content);
   if(arr != null) {
-    for(i in arr) {
-      console.log(i + " => " + arr[i]);
-    }
     message.channel.send(arr[1] + " !");
   }
   
-  //Criplodocus
-  arr = /[Cc]ri(\w+)\W?/g.exec(message.content);
+  // Criplodocus
+  arr = /cr[iy](\w+)\W?/gi.exec(message.content);
   if(arr != null) {
-    for(i in arr) {
-      console.log(i + " => " + arr[i]);
-    }
     message.channel.send(arr[1].toUpperCase() + " !");
+  }
+  
+  // Say
+  arr = /!say (.+)/gi.exec(message.content);
+  if(arr != null) {
+    message.channel.send(arr[1]);
+    message.delete();
   }
 })
 
@@ -40,6 +41,6 @@ fs.readFile('./config.json', 'utf-8', (err, data) => {
     console.error("Error : config.json does not contain a valid token. ");
     return;
   }
-  bot.login(data.token)
+  bot.login(data.token);
 });
 
