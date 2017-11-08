@@ -14,10 +14,29 @@ bot.on('message', message => {
     message.reply('pong !');
   }
   
+  // Neighbours
+  var words = message.content.split(' ').map((x) => { return x.toString().trim(); });
+  var found = false;
+  var answer;
+  for(i in words) {
+    if(words[i].toUpperCase() == words[i]) {
+      if(found && /\w/.test(words[i])) {
+        answer += " et que " + words[i];
+      }else if(words[i].toString().length > 3 && /[\w]{3}/.test(words[i])) {
+        answer = "Hey, les voisins ont pas besoin de savoir que " + words[i];
+        found = true;
+      }
+    }
+  }
+  if(found) {
+    message.channel.send(answer + " !");
+    return;
+  }
+
   // Say
-  arr = /!say (.+)/gi.exec(message.content);
+  arr = /^!say (.+)/gi.exec(message.content);
   if(arr != null) {
-    message.channel.send(arr[1]);
+    message.channel.send(arr[1]+" *("+message.author.username+")*");
     message.delete();
   }
   
@@ -51,7 +70,7 @@ fs.readFile('./config.json', 'utf-8', (err, data) => {
   data = JSON.parse(data);
   if(!data.hasOwnProperty('token') || data.token == '' || data.token == undefined) {
     console.error("Error : config.json does not contain a valid token. ");
-    return;
+    return; 
   }
   bot.login(data.token);
 });
