@@ -19,12 +19,11 @@ bot.on('message', message => {
   if(arr != null) {
     message.channel.send(arr[1]);
     message.delete();
-    return;
   }
   
   // Diplodocus
   var arr = /d[iy]([\wéèãàñÉÈÀ]+)\W?/gi.exec(message.content);
-  if(arr != null) {
+  if(arr != null && !message.content.startsWith("!")) {
     if(arr[1].length > 2 && /a|e|i|o|u|y/i.test(arr[1])) {
       message.channel.send(arr[1] + " !");
     }
@@ -32,7 +31,7 @@ bot.on('message', message => {
   
   // Criplodocus
   arr = /cr[iy]([\wéèãàñÉÈÀ]+)\W?/gi.exec(message.content);
-  if(arr != null) {
+  if(arr != null && !message.content.startsWith("!")) {
     if(arr[1].length > 2 && /a|e|i|o|u|y/i.test(arr[1])) {
       message.channel.send(arr[1].toUpperCase() + " !");
     }
