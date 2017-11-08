@@ -14,6 +14,14 @@ bot.on('message', message => {
     message.reply('pong !');
   }
   
+  // Say
+  arr = /!say (.+)/gi.exec(message.content);
+  if(arr != null) {
+    message.channel.send(arr[1]);
+    message.delete();
+    return;
+  }
+  
   // Diplodocus
   var arr = /d[iy]([\wéèãàñÉÈÀ]+)\W?/gi.exec(message.content);
   if(arr != null) {
@@ -28,13 +36,6 @@ bot.on('message', message => {
     if(arr[1].length > 2 && /a|e|i|o|u|y/i.test(arr[1])) {
       message.channel.send(arr[1].toUpperCase() + " !");
     }
-  }
-  
-  // Say
-  arr = /!say (.+)/gi.exec(message.content);
-  if(arr != null) {
-    message.channel.send(arr[1]);
-    message.delete();
   }
   
   // Help
