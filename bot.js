@@ -92,6 +92,7 @@ bot.on('message', message => {
       msg.react(bot.emojis.find("name", "VoteNay").id);
       msg.react(bot.emojis.find("name", "VoteYea").id);
       msg.react(bot.emojis.find("name", "Goodenough").id);
+      msg.react(bot.emojis.find("name", "NotConvinced").id);
     })
     .catch(() => {});
     message.delete();
@@ -100,7 +101,7 @@ bot.on('message', message => {
 
   // Help
   if(message.content == "!help" || message.content == "!aide") {
-    message.channel.send("**Bonjour, je suis CL4P-TR4P !**\nVoici toutes les comandes que je connais pour le moment :\n - !say *message* : parle. \n - !vote message : Demande un vote\n - !vote message | @p1[, @p2 ,   @p3,@p4] : Demande un vote et ping\n - !help : affiche ce message d'aide. \nPlus de fonctionnalités sont en cours de développement, un jour je battrai José... '");
+    message.channel.send("**Bonjour, je suis CL4P-TR4P !**\nVoici toutes les comandes que je connais pour le moment :\n - !say *message* : parle. \n - !vote message : Demande un vote\n - !vote message | @p1[, @p2 ,   @p3,@p4] : Demande un vote et ping\n - !help : affiche ce message d'aide. \nPlus de fonctionnalités sont en cours de développement, un jour je battrai José... ");
   }
 })
 
