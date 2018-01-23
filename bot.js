@@ -63,8 +63,29 @@ bot.on('message', message => {
     message.channel.send("Désolé, je le referai plus...");
   }
 
-  // Poll
-  arr = /!vote (.+)/gi.exec(message.content);
+  // Vote
+  arr = /^!vote ([^\|]+)\|([^\|]+)/gi.exec(message.content);
+  if(arr != null) {
+    var send = "*" + message.author.username + "* : " + arr[1] + " (";
+    const ping = arr[2].split(", ").map(e => e.trim());
+    ping.forEach((e) => {
+      if(e[0] == '@' || (e[0] == '<' && e[1] == '@')) { send += e + " "; }
+      // console.log(e);
+    });
+    send += ")";
+
+    message.channel.send(send)
+    .then(function(msg) {
+      msg.react(bot.emojis.find("name", "VoteNay").id);
+      msg.react(bot.emojis.find("name", "VoteYea").id);
+      msg.react(bot.emojis.find("name", "Goodenough").id);
+    })
+    .catch(() => {});
+    message.delete();
+    return;
+  }
+
+  arr = /^!vote ([^\|]+)/gi.exec(message.content);
   if(arr != null) {
     message.channel.send("*" + message.author.username + "* : " + arr[1])
     .then(function(msg) {
@@ -74,11 +95,12 @@ bot.on('message', message => {
     })
     .catch(() => {});
     message.delete();
+    return;
   }
 
   // Help
   if(message.content == "!help" || message.content == "!aide") {
-    message.channel.send("**Bonjour, je suis CL4P-TR4P !**\nVoici toutes les comandes que je connais pour le moment :\n - !say *message* : parle. \n - !vote message : Demande un vote\n - !help : affiche ce message d'aide. \nPlus de fonctionnalités sont en cours de développement, un jour je battrai José... '");
+    message.channel.send("**Bonjour, je suis CL4P-TR4P !**\nVoici toutes les comandes que je connais pour le moment :\n - !say *message* : parle. \n - !vote message : Demande un vote\n - !vote message | @p1[, @p2 ,   @p3,@p4] : Demande un vote et ping\n - !help : affiche ce message d'aide. \nPlus de fonctionnalités sont en cours de développement, un jour je battrai José... '");
   }
 })
 
