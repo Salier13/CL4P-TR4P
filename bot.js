@@ -44,7 +44,8 @@ bot.on('message', message => {
   // Diplodocus
   var arr = /d[iy]([\wéèãàñÉÈÀ]+)\W?/gi.exec(message.content);
   if(arr != null && !message.content.startsWith("!")) {
-    if(arr[1].length > 2 && /a|e|i|o|u|y|é|è|ô|ù/i.test(arr[1])) {
+    var exceptions = ["SENT", "SAIENT", "MANCHE", "SANT"];
+    if(arr[1].length > 2 && /a|e|i|o|u|y|é|è|ô|ù/i.test(arr[1]) && !exceptions.includes(arr[1].toUpperCase())) {
       message.channel.send(arr[1] + " !");
     }
   }
@@ -79,6 +80,7 @@ bot.on('message', message => {
       msg.react(bot.emojis.find("name", "VoteNay").id);
       msg.react(bot.emojis.find("name", "VoteYea").id);
       msg.react(bot.emojis.find("name", "Goodenough").id);
+      msg.react(bot.emojis.find("name", "NotConvinced").id);
     })
     .catch(() => {});
     message.delete();
