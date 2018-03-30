@@ -5,7 +5,7 @@ const bot = new Discord.Client();
 
 bot.on('ready', function () {
   console.log("Je suis connecté !");
-  bot.user.setGame("!help (ou mp Salicorne)");
+  bot.user.setActivity("!help (ou mp Salicorne)");
 })
 
 bot.on('message', message => {
