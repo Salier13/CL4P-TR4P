@@ -44,7 +44,7 @@ bot.on('message', message => {
   // Diplodocus
   var arr = /d[iy]([\wéèêëãàâäñÉÈÊËÀÂÄ]+)\W?/gi.exec(message.content);
   if(arr != null && !message.content.startsWith("!")) {
-    var exceptions = ["SENT", "SAIENT", "MANCHE", "SANT", "RAIENT", "RENT", "RONT", "REZ"];
+    var exceptions = ["SENT", "SAIENT", "MANCHE", "SANT", "RAIENT", "RENT", "RONT", "REZ", "RAIS", "RAIT"];
     if(arr[1].length > 2 && /a|e|i|o|u|y|é|è|ô|ù/i.test(arr[1]) && !exceptions.includes(arr[1].toUpperCase())) {
       message.channel.send(arr[1] + " !");
     }
@@ -59,7 +59,7 @@ bot.on('message', message => {
   }
 
   // Con de bot
-  arr = /con(.*) bot/gi.exec(message.content);
+  arr = /con de bot/gi.exec(message.content);
   if(arr != null && !message.content.startsWith("!")) {
     message.channel.send("Désolé, je le referai plus...");
   }
