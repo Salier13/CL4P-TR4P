@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+
+
+##################
+#   CL4P-TR4P    #
+##################
+
+  cl4p-tr4p:
+    container_name: cl4p-tr4p
+    build: .
+    restart: unless-stopped
+
