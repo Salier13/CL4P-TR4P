@@ -91,10 +91,12 @@ bot.on('message', message => {
       var emojis = bot.emojis.keyArray();
       var usedEmojis = [];
       options.forEach(i => {
-        eid = Math.floor(Math.random()*emojis.length);
-        send += '\n' + bot.emojis.get(emojis[eid]) + ": " + i;
-        usedEmojis.push(emojis[eid]);
-        emojis.splice(eid, 1);
+        if((i+"").length > 0 && emojis.length > 0) {
+          eid = Math.floor(Math.random()*emojis.length);
+          send += '\n' + bot.emojis.get(emojis[eid]) + ": " + i;
+          usedEmojis.push(emojis[eid]);
+          emojis.splice(eid, 1);
+        }
       });
       message.channel.send(send).then(async function (msg) {
         for(var i = 0; i < usedEmojis.length; i++) {  // For loop instead of .forEach because of async
