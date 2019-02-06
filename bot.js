@@ -42,6 +42,7 @@ bot.on('message', message => {
   }
   
   // Diplodocus
+  /*
   var arr = /d[iy]([\wéèêëãàâäñÉÈÊËÀÂÄ]+)\W?/gi.exec(message.content);
   if(arr != null && !message.content.startsWith("!")) {
     var exceptions = ["SENT", "SAIENT", "MANCHE", "SANT", "RAIENT", "RENT", "RONT", "REZ", "RAIS", "RAIT"];
@@ -49,14 +50,17 @@ bot.on('message', message => {
       message.channel.send(arr[1] + " !");
     }
   }
+  */
   
   // Criplodocus
+  /*
   arr = /cr[iy]([\wéèêëãàâäñÉÈÊËÀÂÄ]+)\W?/gi.exec(message.content);
   if(arr != null && !message.content.startsWith("!")) {
     if(arr[1].length > 2 && /a|e|i|o|u|y|é|è|ô|ù/i.test(arr[1])) {
       message.channel.send(arr[1].toUpperCase() + " !");
     }
   }
+  */
 
   // Con de bot
   arr = /con de bot/gi.exec(message.content);
@@ -65,45 +69,47 @@ bot.on('message', message => {
   }
 
   // Vote
-  arr = /^!vote ([^\|]+)\|([^\|]+)/gi.exec(message.content);
+  arr = /^!vote (.+)$/gi.exec(message.content);
   if(arr != null) {
-    var send = "*" + message.author.username + "* : " + arr[1] + " (";
-    const ping = arr[2].split(", ").map(e => e.trim());
-    ping.forEach((e) => {
-      if(e[0] == '@' || (e[0] == '<' && e[1] == '@')) { send += e + " "; }
-      // console.log(e);
-    });
-    send += ")";
-
-    message.channel.send(send)
-    .then(function(msg) {
-      msg.react(bot.emojis.find("name", "VoteNay").id);
-      msg.react(bot.emojis.find("name", "VoteYea").id);
-      msg.react(bot.emojis.find("name", "Goodenough").id);
-      msg.react(bot.emojis.find("name", "NotConvinced").id);
-    })
-    .catch(() => {});
-    message.delete();
-    return;
-  }
-
-  arr = /^!vote ([^\|]+)/gi.exec(message.content);
-  if(arr != null) {
-    message.channel.send("*" + message.author.username + "* : " + arr[1])
-    .then(function(msg) {
-      msg.react(bot.emojis.find("name", "VoteNay").id);
-      msg.react(bot.emojis.find("name", "VoteYea").id);
-      msg.react(bot.emojis.find("name", "Goodenough").id);
-      msg.react(bot.emojis.find("name", "NotConvinced").id);
-    })
-    .catch(() => {});
-    message.delete();
-    return;
+    const options = arr[1].split("|").map(e => e.trim());
+    var send = "*" + message.author.username + "* : ";
+    if(options.length <= 1) {
+      send += options[0];
+      message.channel.send(send)
+      .then(async msg => {
+        await msg.react(bot.emojis.find(e => {return e.name == "VoteYea"}).id);
+        await msg.react(bot.emojis.find(e => {return e.name == "Goodenough"}).id);
+        await msg.react(bot.emojis.find(e => {return e.name == "NotConvinced"}).id);
+        await msg.react(bot.emojis.find(e => {return e.name == "VoteNay"}).id);
+      })
+      .catch(() => {});
+      message.delete();
+      return;
+    }
+    else {
+      // bot.emojis.forEach(i => console.log(i.name));
+      var emojis = bot.emojis.keyArray();
+      var usedEmojis = [];
+      options.forEach(i => {
+        eid = Math.floor(Math.random()*emojis.length);
+        send += '\n' + bot.emojis.get(emojis[eid]) + ": " + i;
+        usedEmojis.push(emojis[eid]);
+        emojis.splice(eid, 1);
+      });
+      message.channel.send(send).then(async function (msg) {
+        for(var i = 0; i < usedEmojis.length; i++) {  // For loop instead of .forEach because of async
+          await msg.react(bot.emojis.get(usedEmojis[i]));
+        };
+      })
+      .catch(() => {});
+      message.delete();
+      return;
+    }
   }
 
   // Help
   if(message.content == "!help" || message.content == "!aide") {
-    message.channel.send("**Bonjour, je suis CL4P-TR4P !**\nVoici toutes les comandes que je connais pour le moment :\n - !say *message* : parle. \n - !vote message : Demande un vote\n - !vote message | @p1[, @p2 ,   @p3,@p4] : Demande un vote et ping\n - !help : affiche ce message d'aide. \nPlus de fonctionnalités sont en cours de développement, un jour je battrai José... ");
+    message.channel.send("**Bonjour, je suis CL4P-TR4P !**\nVoici toutes les comandes que je connais pour le moment :\n - !say *message* : parle. \n - !vote message : Demande un vote\n - !vote option 1 | option 2 [|options n...] : Demande un vote entre plusieurs options\n - !help : affiche ce message d'aide. \nPlus de fonctionnalités sont en cours de développement, un jour je battrai José... ");
   }
 })
 
