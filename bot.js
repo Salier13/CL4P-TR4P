@@ -3,10 +3,24 @@ const http = require('http');
 const Discord = require('discord.js');
 const bot = new Discord.Client();
 
+var config;
+var voteEmojis = [];
+
 bot.on('ready', function () {
   console.log("Je suis connecté !");
   bot.user.setActivity("!help (ou mp Salicorne)");
+
+  config.voteEmojis.forEach(emojiName => {
+    console.log(`Searching for emoji '${emojiName}'`)
+    voteEmojis.push(bot.emojis.find(e => {return e.name == emojiName}).id);
+  });
 })
+
+async function reactWithVoteEmojis(msg) {
+  for (voteEmoji of voteEmojis) {
+    await msg.react(voteEmoji);
+  }
+}
 
 bot.on('message', message => {
   if(message.author.username == bot.user.username) {return;}  // Do not process our own messages
@@ -69,20 +83,29 @@ bot.on('message', message => {
   }
 
   // Vote
-  arr = /^!vote (.+)$/gi.exec(message.content);
+  arr = /^!vote(matrix)? (.+)$/gi.exec(message.content);
   if(arr != null) {
-    const options = arr[1].split("|").map(e => e.trim());
+    const options = arr[2].split("|").map(e => e.trim());
+    const matrix = arr[1] !== undefined;
     var send = "*" + message.author.username + "* : ";
     if(options.length <= 1) {
       send += options[0];
       message.channel.send(send)
-      .then(async msg => {
-        await msg.react(bot.emojis.find(e => {return e.name == "VoteYea"}).id);
-        await msg.react(bot.emojis.find(e => {return e.name == "Goodenough"}).id);
-        await msg.react(bot.emojis.find(e => {return e.name == "NotConvinced"}).id);
-        await msg.react(bot.emojis.find(e => {return e.name == "VoteNay"}).id);
-      })
+      .then(reactWithVoteEmojis)
       .catch(() => {});
+      message.delete();
+      return;
+    }
+    else if(matrix) {
+      message.channel.send(send)
+        .catch(() => {});
+      options.forEach(i => {
+        if((i+"").length > 0){
+          message.channel.send(i)
+           .then(reactWithVoteEmojis)
+           .catch(() => {});
+        }
+      });
       message.delete();
       return;
     }
@@ -111,7 +134,7 @@ bot.on('message', message => {
 
   // Help
   if(message.content == "!help" || message.content == "!aide") {
-    message.channel.send("**Bonjour, je suis CL4P-TR4P !**\nVoici toutes les comandes que je connais pour le moment :\n - !say *message* : parle. \n - !vote message : Demande un vote\n - !vote option 1 | option 2 [|options n...] : Demande un vote entre plusieurs options\n - !help : affiche ce message d'aide. \nPlus de fonctionnalités sont en cours de développement, un jour je battrai José... ");
+    message.channel.send("**Bonjour, je suis CL4P-TR4P !**\nVoici toutes les comandes que je connais pour le moment :\n - !say *message* : parle. \n - !vote message : Demande un vote\n - !vote option 1 | option 2 [|options n...] : Demande un vote entre plusieurs options\n - !votematrix option 1 | option 2 [|options n...] : Demande une matrice de votes entre plusieurs options\n - !help : affiche ce message d'aide. \nPlus de fonctionnalités sont en cours de développement, un jour je battrai José... ");
   }
 })
 
@@ -120,11 +143,11 @@ fs.readFile('./config.json', 'utf-8', (err, data) => {
     console.error("Error : could not open file config.json");
     return;
   }
-  data = JSON.parse(data);
-  if(!data.hasOwnProperty('token') || data.token == '' || data.token == undefined) {
+  config = JSON.parse(data);
+  if(!config.hasOwnProperty('token') || config.token == '' || config.token == undefined) {
     console.error("Error : config.json does not contain a valid token. ");
     return; 
   }
-  bot.login(data.token);
+  bot.login(config.token);
 });
 

@@ -1,1 +1,8 @@
-{"token": ""}
+{
+    "token": "",
+    "voteEmojis": [
+        "customEmoji1",
+        "customEmoji2",
+        "customEmoji3",
+    ]
+}
