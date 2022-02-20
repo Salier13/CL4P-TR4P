@@ -132,6 +132,34 @@ bot.on('message', message => {
     }
   }
 
+  // Embeded messages link
+  if(!message.author.bot && message.attachments.size && message.content.includes('discord.com/channels')){
+
+    const attachment = message.attachments.first();
+    const url = attachment ? attachment.url : null;
+    if(url != null){
+      //Get URL info 'https://discordapp.com/channels/guild_id/channel_id/message_id'
+      const linkPart = url.split('/')
+      if(linkPart.length != 7) return;
+      const server_id = int(link[4])
+      const channel_id = int(link[6])
+      const msg_id = int(link[5])
+      if(server_id != message.guild.id) return;
+      channelLinked = client.get_guild(server_id).get_channel(channel_id)
+      messageLinked = await channel.fetch_message(msg_id)
+      // Send the embed
+      const embed = new MessageEmbed()
+        .setDescription(messageLinked.content)
+        .setURL(url)
+        .setAuthor(messageLinked.author.tag, messageLinked.author.displayAvatarURL())
+        .setFooter('Message link requested by ' + message.author.username)
+      // TODOM Handle attachments of links and images from the linked messaged to the embbed
+      message.channel.send({embeds: [embed]}).catch(console.error)
+      // Discord.js v12:
+      // channel.send(embed).catch(console.error)
+    }
+  }
+
   // Help
   if(message.content == "!help" || message.content == "!aide") {
     message.channel.send("**Bonjour, je suis CL4P-TR4P !**\nVoici toutes les comandes que je connais pour le moment :\n - !say *message* : parle. \n - !vote message : Demande un vote\n - !vote option 1 | option 2 [|options n...] : Demande un vote entre plusieurs options\n - !votematrix option 1 | option 2 [|options n...] : Demande une matrice de votes entre plusieurs options\n - !help : affiche ce message d'aide. \nPlus de fonctionnalités sont en cours de développement, un jour je battrai José... ");
